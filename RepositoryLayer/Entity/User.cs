@@ -26,5 +26,7 @@ namespace RepositoryLayer.Entity
 
         public DateTime? ModifiedAt { get; set; }
 
+        public virtual List<Notes> note { get; set; }
+
     }
 }
