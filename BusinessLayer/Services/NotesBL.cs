@@ -68,5 +68,33 @@ namespace BusinessLayer.Services
             }
         }
 
+        public bool isPin(long id, long userId, bool value)
+        {
+
+            try
+            {
+                return this._notesRL.isPin(id, userId, value);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
+        }
+
+        public bool ChangeColor(long id, long userId, NotesModel notesModel)
+        {
+
+            try
+            {
+                return this._notesRL.ChangeColor(id, userId, notesModel);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
+        }
+
     }
 }
