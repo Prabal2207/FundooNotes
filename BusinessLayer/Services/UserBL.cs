@@ -51,5 +51,32 @@ namespace BusinessLayer.Services
                 throw;
             }
         }
+
+        public User ForgetPassword(ForgetPasswordModel forgetpaswordModel)
+        {
+            try
+            {
+                return _userRL.ForgetPassword(forgetpaswordModel);
+            }
+            catch (Exception e)
+            {
+                throw;
+            }
+        }
+
+        public User ResetPassword(ResetPasswordModel resetpaswordModel,long UserId)
+        {
+            try
+            {
+                return _userRL.ResetPassword(resetpaswordModel,UserId);
+            }
+            catch (Exception e)
+            {
+                throw;
+            }
+        }
+
+
+
     }
 }

@@ -17,7 +17,7 @@ namespace BusinessLayer.Services
             this._notesRL = notesRL;
         }
 
-        public List<NotesModel> getAllData()
+        public List<Notes> getAllData()
         {
             try
             {
@@ -28,5 +28,45 @@ namespace BusinessLayer.Services
                 throw;
             }
         }
+
+        public bool AddData(NotesModel notesModel, long userId)
+        {
+            try
+            {
+                return this._notesRL.AddData(notesModel, userId);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+
+
+
+        public bool DeleteNotes(long id, long userId)
+        {
+            try
+            {
+                return this._notesRL.DeleteNotes(id, userId);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public bool UpdateNotes(long id, long userId, NotesModel notesModel)
+        {
+            try
+            {
+                return this._notesRL.UpdateNotes(id, userId, notesModel);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
     }
 }
