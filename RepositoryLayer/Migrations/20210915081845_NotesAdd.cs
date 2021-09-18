@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace RepositoryLayer.Migrations
 {
-    public partial class Notes : Migration
+    public partial class NotesAdd : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -19,25 +19,26 @@ namespace RepositoryLayer.Migrations
                     Color = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     image = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     IsArchive = table.Column<bool>(type: "bit", nullable: false),
+                    IsTrash = table.Column<bool>(type: "bit", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     ModifiedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    UserId1 = table.Column<long>(type: "bigint", nullable: true)
+                    Id = table.Column<long>(type: "bigint", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Note", x => x.UserId);
                     table.ForeignKey(
-                        name: "FK_Note_Users_UserId1",
-                        column: x => x.UserId1,
+                        name: "FK_Note_Users_Id",
+                        column: x => x.Id,
                         principalTable: "Users",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Note_UserId1",
+                name: "IX_Note_Id",
                 table: "Note",
-                column: "UserId1");
+                column: "Id");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

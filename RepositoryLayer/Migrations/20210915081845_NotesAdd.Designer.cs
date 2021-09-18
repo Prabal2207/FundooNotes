@@ -10,8 +10,8 @@ using RepositoryLayer.Context;
 namespace RepositoryLayer.Migrations
 {
     [DbContext(typeof(UserContext))]
-    [Migration("20210914051709_Notes")]
-    partial class Notes
+    [Migration("20210915081845_NotesAdd")]
+    partial class NotesAdd
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -34,7 +34,13 @@ namespace RepositoryLayer.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
+                    b.Property<long>("Id")
+                        .HasColumnType("bigint");
+
                     b.Property<bool>("IsArchive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsTrash")
                         .HasColumnType("bit");
 
                     b.Property<string>("Message")
@@ -49,15 +55,12 @@ namespace RepositoryLayer.Migrations
                     b.Property<string>("Title")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<long?>("UserId1")
-                        .HasColumnType("bigint");
-
                     b.Property<string>("image")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("UserId");
 
-                    b.HasIndex("UserId1");
+                    b.HasIndex("Id");
 
                     b.ToTable("Note");
                 });
@@ -98,11 +101,18 @@ namespace RepositoryLayer.Migrations
 
             modelBuilder.Entity("RepositoryLayer.Entity.Notes", b =>
                 {
-                    b.HasOne("RepositoryLayer.Entity.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId1");
+                    b.HasOne("RepositoryLayer.Entity.User", "userId")
+                        .WithMany("note")
+                        .HasForeignKey("Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.Navigation("User");
+                    b.Navigation("userId");
+                });
+
+            modelBuilder.Entity("RepositoryLayer.Entity.User", b =>
+                {
+                    b.Navigation("note");
                 });
 #pragma warning restore 612, 618
         }
