@@ -115,5 +115,53 @@ namespace RepositoryLayer.Services
            
 
         }
+
+
+        public bool isPin(long id, long userId, bool value)
+        {
+            try
+            {
+                var result = _userContext.Note.FirstOrDefault(e => e.UserId == id && e.Id == userId);
+
+                if (result != null)
+                {
+                    result.isPin = value;
+                   _userContext.SaveChanges();
+                    return true;
+                }
+                return false;
+
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+
+
+        }
+
+        public bool ChangeColor(long id, long userId, NotesModel notesModel)
+        {
+            try
+            {
+                var result = _userContext.Note.FirstOrDefault(e => e.Id == id && e.UserId == userId);
+
+                if (result != null)
+                {
+                    result.Color = notesModel.Color;
+                    result.ModifiedAt = DateTime.Now;
+                   _userContext.SaveChanges();
+                    return true;
+                }
+                return false; 
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
     }
+    
 }
