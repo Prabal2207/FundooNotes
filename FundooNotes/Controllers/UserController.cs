@@ -1,5 +1,6 @@
 ﻿using BusinessLayer.Interface;
 using CommonLayer;
+using CommonLayer.MSMQ;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -18,6 +19,7 @@ namespace FundooNotes.Controllers
 {
     [Route("[controller]")]
     [ApiController]
+    [Authorize]
     public class UserController : ControllerBase
     {
         private IUserBL _userBL;
@@ -30,6 +32,7 @@ namespace FundooNotes.Controllers
         }
 
         [HttpGet]
+        
         public IActionResult userData()
         {
             var useList = this._userBL.getAllUsers();
@@ -82,6 +85,72 @@ namespace FundooNotes.Controllers
                 throw;
             }
 
+        }
+
+        private long getTokenID()
+        {
+            return Convert.ToInt64(User.FindFirst("Id").Value);
+        }
+
+        [AllowAnonymous]
+        [HttpPost("forgetpassword")]
+        public IActionResult Forgetpassword([FromBody] ForgetPasswordModel forgetpasword)
+        {
+            try
+            {
+                User user = _userBL.ForgetPassword(forgetpasword);
+
+                if (user != null)
+                {
+                     
+                    var tokenString = GenerateJSONWebToken(user.Id, user.Email);
+                    
+                    new msmqOperation().sendingData(tokenString);
+                    return this.Ok(new { Success = true, Message = "Reset password link is send to you via mail" });
+
+
+
+
+                }
+                else
+                {
+                    return this.BadRequest(new { Success = false, message = "Email doesn't match" });
+                }
+
+
+
+            }
+            catch (Exception e)
+            {
+                return this.BadRequest(new { success = false, message = e.Message, stackTrace = e.StackTrace });
+            }
+        }
+
+        [HttpPut("resetpassword")]
+        public IActionResult Resetpassword([FromBody] ResetPasswordModel resetpassword)
+        {
+            try
+            {
+               
+                    long Id = getTokenID();
+                    User user = _userBL.ResetPassword(resetpassword, Id);
+                    if (user != null)
+                    {
+
+                        return this.Ok(new { Success = true, Message = "Password changed success" });
+                    }
+                    else
+                    {
+                        return this.BadRequest(new { Success = false, message = "Unsuccessful" });
+                    }
+
+                
+            }
+            
+            catch (Exception e)
+            {
+                return this.BadRequest(new { success = false, message = e.Message, stackTrace = e.StackTrace });
+            }
         }
 
         private string GenerateJSONWebToken(long Id, string email)
