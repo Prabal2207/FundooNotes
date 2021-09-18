@@ -119,10 +119,10 @@ namespace FundooNotes.Controllers
         }
 
         [HttpPut("isPinned")]
-        public IActionResult isPin(long noteId, bool value)
+        public IActionResult isPin(long id, bool value)
         {
             long userId = getTokenID();
-            bool result = _notesBL.isPin(noteId, userId, value);
+            bool result = _notesBL.isPin(id, userId, value);
 
             try
             {
@@ -133,6 +133,29 @@ namespace FundooNotes.Controllers
                 else
                 {
                     return BadRequest(new { Success = false, message = "Unsuccessful" });
+                }
+            }
+            catch (Exception e)
+            {
+                return BadRequest(new { Success = false, message = e.Message, stackTrace = e.StackTrace });
+            }
+        }
+
+        [HttpPut("ChangeColour")]
+        public IActionResult ChangeColor(long id, NotesModel notesModel)
+        {
+            long userId = getTokenID();
+            bool result = _notesBL.ChangeColor(id, userId, notesModel);
+
+            try
+            {
+                if (result == true)
+                {
+                    return Ok(new { Success = true, message = "Color changed Successfully !!" });
+                }
+                else
+                {
+                    return BadRequest(new { Success = false, message = "Color not changed !!" });
                 }
             }
             catch (Exception e)
