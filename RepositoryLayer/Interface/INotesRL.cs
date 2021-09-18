@@ -17,5 +17,9 @@ namespace RepositoryLayer.Interface
         bool DeleteNotes(long id, long userId);
 
         bool UpdateNotes(long id, long userId, NotesModel notesModel);
+
+        bool isPin(long id, long userId, bool value);
+
+        bool ChangeColor(long id, long userId, NotesModel notesModel);
     }
 }
