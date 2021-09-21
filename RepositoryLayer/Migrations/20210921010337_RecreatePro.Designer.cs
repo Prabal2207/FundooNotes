@@ -10,8 +10,8 @@ using RepositoryLayer.Context;
 namespace RepositoryLayer.Migrations
 {
     [DbContext(typeof(UserContext))]
-    [Migration("20210915081845_NotesAdd")]
-    partial class NotesAdd
+    [Migration("20210921010337_RecreatePro")]
+    partial class RecreatePro
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -21,9 +21,34 @@ namespace RepositoryLayer.Migrations
                 .HasAnnotation("ProductVersion", "5.0.9")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+            modelBuilder.Entity("RepositoryLayer.Entity.Collaborator", b =>
+                {
+                    b.Property<long>("CollaboratorId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("CollaboratorEmailId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<long>("NotesId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long?>("UserId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("CollaboratorId");
+
+                    b.HasIndex("NotesId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Collaborator");
+                });
+
             modelBuilder.Entity("RepositoryLayer.Entity.Notes", b =>
                 {
-                    b.Property<long>("UserId")
+                    b.Property<long>("NotesId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bigint")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
@@ -33,9 +58,6 @@ namespace RepositoryLayer.Migrations
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
-
-                    b.Property<long>("Id")
-                        .HasColumnType("bigint");
 
                     b.Property<bool>("IsArchive")
                         .HasColumnType("bit");
@@ -55,19 +77,25 @@ namespace RepositoryLayer.Migrations
                     b.Property<string>("Title")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<long>("UserId")
+                        .HasColumnType("bigint");
+
                     b.Property<string>("image")
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("UserId");
+                    b.Property<bool>("isPin")
+                        .HasColumnType("bit");
 
-                    b.HasIndex("Id");
+                    b.HasKey("NotesId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Note");
                 });
 
             modelBuilder.Entity("RepositoryLayer.Entity.User", b =>
                 {
-                    b.Property<long>("Id")
+                    b.Property<long>("UserId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bigint")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
@@ -90,7 +118,7 @@ namespace RepositoryLayer.Migrations
                     b.Property<string>("Password")
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("Id");
+                    b.HasKey("UserId");
 
                     b.HasIndex("Email")
                         .IsUnique()
@@ -99,11 +127,28 @@ namespace RepositoryLayer.Migrations
                     b.ToTable("Users");
                 });
 
+            modelBuilder.Entity("RepositoryLayer.Entity.Collaborator", b =>
+                {
+                    b.HasOne("RepositoryLayer.Entity.Notes", "Note")
+                        .WithMany()
+                        .HasForeignKey("NotesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("RepositoryLayer.Entity.User", "user")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("Note");
+
+                    b.Navigation("user");
+                });
+
             modelBuilder.Entity("RepositoryLayer.Entity.Notes", b =>
                 {
                     b.HasOne("RepositoryLayer.Entity.User", "userId")
                         .WithMany("note")
-                        .HasForeignKey("Id")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
