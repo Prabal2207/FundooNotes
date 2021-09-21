@@ -18,22 +18,6 @@ namespace BusinessLayer.Services
             this._userContext = userContext;
         }
 
-        public List<UserModel> getAllUsers()
-        {
-            try
-            {
-                List<UserModel> userModels = new List<UserModel>();
-                //userModels.Add(new UserModel { FirstName = "Prabal", LastName = "Rau", Email = "prabal760@ga" });
-                //userModels.Add(new UserModel { FirstName = "pgts", LastName = "kshc", Email = "jjsd@ga" });
-
-                return userModels;
-            }
-            catch (Exception e)
-            {
-                throw;
-            }
-        }
-
         public bool RegisterUser(UserModel userModel)
         {
             try
@@ -65,7 +49,7 @@ namespace BusinessLayer.Services
         {
             try
             {
-                var result = _userContext.Users.SingleOrDefault(e => e.Email == logInModel.email 
+                var result = _userContext.Users.SingleOrDefault(e => e.Email == logInModel.email
                                                                     && e.Password == logInModel.password);
 
                 return result;
@@ -75,5 +59,48 @@ namespace BusinessLayer.Services
                 throw;
             }
         }
+
+        public User ForgetPassword(ForgetPasswordModel forgetpaswordModel)
+        {
+            try
+            {
+                var result = _userContext.Users.SingleOrDefault(e => e.Email == forgetpaswordModel.email);
+
+                return result;
+            }
+            catch (Exception e)
+            {
+                throw;
+            }
+        }
+
+        public User ResetPassword(ResetPasswordModel resetpaswordModel,long UserId)
+        {
+
+            try
+            {
+                 User result = _userContext.Users.SingleOrDefault(e=>e.UserId == UserId);
+                if (result != null)
+                {
+                    result.Password = resetpaswordModel.Password;
+
+                    result.ModifiedAt = DateTime.Now;
+                    _userContext.SaveChanges();
+                }
+                return result; 
+
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+
+
+
+
+
+        }
     }
 }
+
