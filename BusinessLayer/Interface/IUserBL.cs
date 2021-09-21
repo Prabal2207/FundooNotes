@@ -8,12 +8,11 @@ namespace BusinessLayer.Interface
 {
     public interface IUserBL
     {
-        List<UserModel> getAllUsers();
         bool RegisterUser(UserModel userModel);
         User UserLogIn(LogInModel logInModel);
 
         User ForgetPassword(ForgetPasswordModel forgetpaswordModel);
 
-         User ResetPassword(ResetPasswordModel resetpaswordModel, long UserId);
+        User ResetPassword(ResetPasswordModel resetpaswordModel, long UserId);
     }
 }

@@ -16,17 +16,7 @@ namespace BusinessLayer.Services
             this._userRL = userRL;
         }
 
-        public List<UserModel> getAllUsers()
-        {
-            try
-            {
-                return this._userRL.getAllUsers();
-            }
-            catch (Exception e)
-            {
-                throw;
-            }
-        }
+       
 
         public bool RegisterUser(UserModel userModel)
         {
@@ -75,6 +65,8 @@ namespace BusinessLayer.Services
                 throw;
             }
         }
+
+
 
 
 
