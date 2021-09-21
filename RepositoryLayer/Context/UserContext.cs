@@ -16,6 +16,9 @@ namespace RepositoryLayer.Context
 
         public DbSet<Notes> Note { get; set; }
 
+        public DbSet<Collaborator> Collaborator { get; set; }
+
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.Entity<User>(entity =>
