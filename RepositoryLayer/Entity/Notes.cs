@@ -10,7 +10,7 @@ namespace RepositoryLayer.Entity
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public long UserId { get; set; }
+        public long NotesId { get; set; }
 
         public string Title { get; set; }
 
@@ -33,9 +33,9 @@ namespace RepositoryLayer.Entity
 
         
         [Display(Name ="User")]
-        public virtual long Id { get; set; }
+        public virtual long UserId { get; set; }
 
-        [ForeignKey("Id")]
+        [ForeignKey("UserId")]
         public virtual User userId { get; set; }
 }
 }
