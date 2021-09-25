@@ -1,5 +1,6 @@
 ﻿using BusinessLayer.Interface;
 using CommonLayer;
+using Microsoft.AspNetCore.Http;
 using RepositoryLayer.Entity;
 using RepositoryLayer.Interface;
 using RepositoryLayer.Services;
@@ -42,11 +43,11 @@ namespace BusinessLayer.Services
             }
         }
 
-        public List<Notes> GetAllNotes(long userId)
+        public List<Notes> GetAllNotes(long userId, string userEmail)
         {
             try
             {
-                return this._notesRL.GetAllNotes(userId);
+                return this._notesRL.GetAllNotes(userId, userEmail);
             }
             catch (Exception)
             {
@@ -121,7 +122,32 @@ namespace BusinessLayer.Services
 
         }
 
-       public bool IsArchive(long userId, long NotesId, bool value)
+       public bool AddImage(long noteId, IFormFile imageProps)
+        {
+
+            try
+            {
+                return this._notesRL.AddImage(noteId, imageProps);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public bool DeleteImage(long noteId, long userId)
+        {
+            try
+            {
+                return this._notesRL.DeleteImage(noteId, userId);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public bool IsArchive(long userId, long NotesId, bool value)
        {
             try
             {
@@ -200,6 +226,42 @@ namespace BusinessLayer.Services
             try
             {
                 return this._notesRL.EmptyTrash(userId);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+       public bool AddReminder(long noteId, long userId, DateTime dateTime)
+        {
+            try
+            {
+                return this._notesRL.AddReminder(noteId,userId, dateTime);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+       public bool DeleteReminder(long noteId, long userId)
+        {
+            try
+            {
+                return this._notesRL.DeleteReminder(noteId,userId);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+       public bool ChangeReminder(long noteId, long userId, DateTime dateTime)
+        {
+            try
+            {
+                return this._notesRL.ChangeReminder(noteId,userId, dateTime);
             }
             catch (Exception)
             {
