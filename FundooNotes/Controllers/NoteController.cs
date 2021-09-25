@@ -7,6 +7,7 @@ using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace FundooNotes.Controllers
@@ -17,6 +18,7 @@ namespace FundooNotes.Controllers
     public class NoteController : ControllerBase
     {
         private INotesBL _notesBL;
+        
 
 
         public NoteController(INotesBL notesBL, IConfiguration configuration)
@@ -28,8 +30,12 @@ namespace FundooNotes.Controllers
         {
             return Convert.ToInt64(User.FindFirst("Id").Value);
         }
+        private string GetEmail()
+        {
+            return User.FindFirst(ClaimTypes.Email).Value.ToString();
+        }
 
-       
+
         [HttpPost]
         public IActionResult AddData(NotesModel notesModel)
         {
@@ -59,7 +65,8 @@ namespace FundooNotes.Controllers
             try
             {
                 long userId = getTokenID();
-                var NotesList = _notesBL.GetAllNotes(userId);
+                string userEmail = GetEmail();
+                var NotesList = _notesBL.GetAllNotes(userId, userEmail);
 
                 if (NotesList.Count != 0)
                 {
@@ -80,7 +87,7 @@ namespace FundooNotes.Controllers
             }
         }
 
-        [HttpDelete("{id:long}")]
+        [HttpDelete("{Notesid:long}")]
        
         public IActionResult DeleteNotes(long Notesid)
         {
@@ -202,6 +209,33 @@ namespace FundooNotes.Controllers
                 return BadRequest(new { Success = false, message = e.Message, stackTrace = e.StackTrace });
             }
         }
+
+        [HttpPut]
+        [Route("api/addImage")]
+        public IActionResult AddImage(long noteId, IFormFile imageProps)
+        {
+            try
+            {
+                bool result = this._notesBL.AddImage(noteId, imageProps);
+                if (result)
+                {
+                   
+                    return this.Ok(new { Status = true, Message = "Image Uploaded" });
+                }
+                else
+                {
+                   
+                    return this.BadRequest(new { Status = false, Message = "Image Not Uploaded" });
+                }
+            }
+            catch (Exception e)
+            {
+                return BadRequest(new { Success = false, message = e.Message, stackTrace = e.StackTrace });
+            }
+        }
+
+
+
 
 
         [HttpPut]
@@ -385,5 +419,78 @@ namespace FundooNotes.Controllers
             }
         }
 
+        [HttpPost]
+        [Route("{noteId}/Reminder")]
+        public IActionResult AddReminder(long noteId, DateTime dateTime)
+        {
+            try
+            {
+                long userId = getTokenID();
+                bool result = _notesBL.AddReminder(noteId, userId, dateTime);
+
+                if (result == true)
+                {
+                    return Ok(new { Success = true, message = "Note Reminder added" });
+                }
+                else
+                {
+                    return BadRequest(new { Success = false, message = "No Reminder is added to this note." });
+                }
+            }
+            catch (Exception e)
+            {
+                return BadRequest(new { Success = false, message = e.Message, stackTrace = e.StackTrace });
+            }
+        }
+
+        [HttpPut]
+        [Route("{noteId}/Reminder")]
+        public IActionResult ChangeReminder(long noteId, DateTime dateTime)
+        {
+            try
+            {
+                long userId = getTokenID();
+                bool result = _notesBL.ChangeReminder(noteId, userId, dateTime);
+
+                if (result == true)
+                {
+                    return Ok(new { Success = true, message = "Note Reminder changed Successfully." });
+                }
+                else
+                {
+                    return BadRequest(new { Success = false, message = "No Reminder is added to this note." });
+                }
+            }
+            catch (Exception e)
+            {
+                return BadRequest(new { Success = false, message = e.Message, stackTrace = e.StackTrace });
+            }
+        }
+
+        [HttpDelete]
+        [Route("{noteId}/Reminder")]
+        public IActionResult DeleteReminder(long noteId)
+        {
+            try
+            {
+                long userId = getTokenID();
+                bool result = _notesBL.DeleteReminder(noteId, userId);
+
+                if (result == true)
+                {
+                    return Ok(new { Success = true, message = "Note Reminder removed Successfully." });
+                }
+                else
+                {
+                    return BadRequest(new { Success = false, message = "No Reminder is added to this note." });
+                }
+            }
+            catch (Exception e)
+            {
+                return BadRequest(new { Success = false, message = e.Message, stackTrace = e.StackTrace });
+            }
+        }
     }
+
 }
+
