@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel;
 
 namespace RepositoryLayer.Entity
 {
@@ -16,15 +17,18 @@ namespace RepositoryLayer.Entity
 
         public string Message { get; set; }
 
-        public string Reminder { get; set; }
+        public DateTime? Reminder { get; set; }
         public string Color { get; set; }
 
         public string image { get; set; }
 
+        [DefaultValue(false)]
         public bool IsArchive { get; set; }
 
+        [DefaultValue(false)]
         public bool isPin { get; set; }
 
+        [DefaultValue(false)]
         public bool IsTrash { get; set; }
 
         public DateTime CreatedAt { get; set; }
@@ -36,6 +40,6 @@ namespace RepositoryLayer.Entity
         public virtual long UserId { get; set; }
 
         [ForeignKey("UserId")]
-        public virtual User userId { get; set; }
+        public virtual User user { get; set; }
 }
 }
