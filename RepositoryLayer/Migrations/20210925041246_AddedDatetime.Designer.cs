@@ -10,8 +10,8 @@ using RepositoryLayer.Context;
 namespace RepositoryLayer.Migrations
 {
     [DbContext(typeof(UserContext))]
-    [Migration("20210921010337_RecreatePro")]
-    partial class RecreatePro
+    [Migration("20210925041246_AddedDatetime")]
+    partial class AddedDatetime
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -46,6 +46,31 @@ namespace RepositoryLayer.Migrations
                     b.ToTable("Collaborator");
                 });
 
+            modelBuilder.Entity("RepositoryLayer.Entity.Label", b =>
+                {
+                    b.Property<long>("LabelId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("LabelName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<long?>("NotesId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("UserId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("LabelId");
+
+                    b.HasIndex("NotesId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Labels");
+                });
+
             modelBuilder.Entity("RepositoryLayer.Entity.Notes", b =>
                 {
                     b.Property<long>("NotesId")
@@ -71,8 +96,8 @@ namespace RepositoryLayer.Migrations
                     b.Property<DateTime?>("ModifiedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Reminder")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<DateTime?>("Reminder")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Title")
                         .HasColumnType("nvarchar(max)");
@@ -144,15 +169,32 @@ namespace RepositoryLayer.Migrations
                     b.Navigation("user");
                 });
 
+            modelBuilder.Entity("RepositoryLayer.Entity.Label", b =>
+                {
+                    b.HasOne("RepositoryLayer.Entity.Notes", "Note")
+                        .WithMany()
+                        .HasForeignKey("NotesId");
+
+                    b.HasOne("RepositoryLayer.Entity.User", "user")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Note");
+
+                    b.Navigation("user");
+                });
+
             modelBuilder.Entity("RepositoryLayer.Entity.Notes", b =>
                 {
-                    b.HasOne("RepositoryLayer.Entity.User", "userId")
+                    b.HasOne("RepositoryLayer.Entity.User", "user")
                         .WithMany("note")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("userId");
+                    b.Navigation("user");
                 });
 
             modelBuilder.Entity("RepositoryLayer.Entity.User", b =>

@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace RepositoryLayer.Migrations
 {
-    public partial class RecreatePro : Migration
+    public partial class Initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -81,6 +81,33 @@ namespace RepositoryLayer.Migrations
                         onDelete: ReferentialAction.Restrict);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "Labels",
+                columns: table => new
+                {
+                    LabelId = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserId = table.Column<long>(type: "bigint", nullable: false),
+                    NotesId = table.Column<long>(type: "bigint", nullable: true),
+                    LabelName = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Labels", x => x.LabelId);
+                    table.ForeignKey(
+                        name: "FK_Labels_Note_NotesId",
+                        column: x => x.NotesId,
+                        principalTable: "Note",
+                        principalColumn: "NotesId",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Labels_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "UserId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_Collaborator_NotesId",
                 table: "Collaborator",
@@ -89,6 +116,16 @@ namespace RepositoryLayer.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_Collaborator_UserId",
                 table: "Collaborator",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Labels_NotesId",
+                table: "Labels",
+                column: "NotesId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Labels_UserId",
+                table: "Labels",
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
@@ -108,6 +145,9 @@ namespace RepositoryLayer.Migrations
         {
             migrationBuilder.DropTable(
                 name: "Collaborator");
+
+            migrationBuilder.DropTable(
+                name: "Labels");
 
             migrationBuilder.DropTable(
                 name: "Note");
