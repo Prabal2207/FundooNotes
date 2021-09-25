@@ -12,7 +12,7 @@ namespace CommonLayer
 
         public string Message { get; set; }
 
-        public string Reminder { get; set; }
+        public DateTime Reminder { get; set; }
 
         public string Color { get; set; }
 
