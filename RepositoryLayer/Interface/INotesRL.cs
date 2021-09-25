@@ -1,4 +1,5 @@
 ﻿using CommonLayer;
+using Microsoft.AspNetCore.Http;
 using RepositoryLayer.Entity;
 using System;
 using System.Collections.Generic;
@@ -12,7 +13,7 @@ namespace RepositoryLayer.Interface
 
         bool AddData(NotesModel notesModel, long NotesId);
 
-        List<Notes> GetAllNotes(long userId);
+        List<Notes> GetAllNotes(long userId, string userEmail);
 
         bool DeleteNotes(long UserId, long NotesId);
 
@@ -23,6 +24,10 @@ namespace RepositoryLayer.Interface
         bool isPin(long UserId, long NotesId, bool value);
 
         bool ChangeColor(long UserId, long NotesId, NotesModel notesModel);
+
+        bool AddImage(long noteId, IFormFile imageProps);
+
+        bool DeleteImage(long noteId, long userId);
 
         bool IsArchive(long UserId, long NotesId, bool value);
 
@@ -37,5 +42,13 @@ namespace RepositoryLayer.Interface
         bool DeleteForever(long noteId, long userId);
 
         bool EmptyTrash(long userId);
+
+        bool AddReminder(long noteId, long userId, DateTime dateTime);
+
+        bool DeleteReminder(long noteId, long userId);
+
+        bool ChangeReminder(long noteId, long userId, DateTime dateTime);
+
+
     }
 }
