@@ -18,6 +18,8 @@ namespace RepositoryLayer.Context
 
         public DbSet<Collaborator> Collaborator { get; set; }
 
+        public DbSet<Label> Labels { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
